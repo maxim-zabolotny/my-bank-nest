@@ -18,6 +18,10 @@ async function bootstrap() {
     .setTitle('My Bank')
     .setDescription('The special bank to safe money :)')
     .setVersion('1.0')
+    .addSecurity('bearer', {
+      type: 'http',
+      scheme: 'bearer',
+    })
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
