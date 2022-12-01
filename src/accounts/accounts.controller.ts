@@ -11,6 +11,7 @@ import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { UserFromJwt } from 'src/auth/models/UserFromJwt';
 import { AccountsService } from './accounts.service';
 import { DepositDto } from './dto/deposit-account.dto';
+import { TransferDto } from './dto/transfer-account.dto';
 import { WithdrawDto } from './dto/withdraw-account.dto';
 import { MovimentationType } from './enums/movimentation.enum';
 
@@ -58,5 +59,15 @@ export class AccountsController {
       },
       MovimentationType.WITHDRAW,
     );
+  }
+
+  @Post('transfer')
+  @HttpCode(204)
+  transfer(@CurrentUser() user: UserFromJwt, @Body() transferDto: TransferDto) {
+    return this.accountsService.transfer({
+      ...transferDto,
+      userId: user.id,
+      senderEmail: user.email,
+    });
   }
 }
