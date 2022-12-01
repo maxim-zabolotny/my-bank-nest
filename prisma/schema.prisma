@@ -33,7 +33,7 @@ model AccountHistory {
   balance     Float
   description String
   account     Account @relation(fields: [accountId], references: [id])
-  accountId   String  @unique
+  accountId   String
 
   @@map("account_history")
 }
