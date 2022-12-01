@@ -7,6 +7,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { DepositDto } from './dto/deposit-account.dto';
 import { WithdrawDto } from './dto/withdraw-account.dto';
+import { MovimentationType } from './enums/movimentation.enum';
 
 @Injectable()
 export class AccountsService {
@@ -36,47 +37,36 @@ export class AccountsService {
   }
 
   findByUser(userId: string) {
-    return this.prisma.account.findFirst({ where: { userId } });
+    return this.prisma.account.findFirst({
+      where: { userId },
+      include: { accountHistory: { orderBy: { createdAt: 'desc' } } },
+    });
   }
 
-  async deposit(depositDto: DepositDto) {
-    const account = await this.findByUser(depositDto.userId);
+  async movimentation(
+    movimentationDto: DepositDto | WithdrawDto,
+    type: MovimentationType,
+  ) {
+    const account = await this.findByUser(movimentationDto.userId);
 
     if (!account) throw new NotFoundException(`Account not found`);
 
-    const newBalance = account.balance + depositDto.value;
+    const description =
+      type === MovimentationType.DEPOSIT
+        ? 'Successful deposit'
+        : 'Successful withdraw';
 
-    await this.prisma.$transaction([
-      this.prisma.account.update({
-        where: { userId: depositDto.userId },
-        data: {
-          balance: newBalance,
-        },
-      }),
-      this.prisma.accountHistory.create({
-        data: {
-          balance: newBalance,
-          value: depositDto.value,
-          description: 'Successful deposit',
-          accountId: account.id,
-        },
-      }),
-    ]);
-  }
+    const parsedValue =
+      movimentationDto.value * (type === MovimentationType.WITHDRAW ? -1 : 1);
 
-  async withdraw(withdrawDto: WithdrawDto) {
-    const account = await this.findByUser(withdrawDto.userId);
-
-    if (!account) throw new NotFoundException(`Account not found`);
-
-    const newBalance = account.balance - withdrawDto.value;
+    const newBalance = account.balance + parsedValue;
 
     if (newBalance < 0)
       throw new ConflictException(`The withdraw is more than balance`);
 
     await this.prisma.$transaction([
       this.prisma.account.update({
-        where: { userId: withdrawDto.userId },
+        where: { userId: movimentationDto.userId },
         data: {
           balance: newBalance,
         },
@@ -84,8 +74,8 @@ export class AccountsService {
       this.prisma.accountHistory.create({
         data: {
           balance: newBalance,
-          value: withdrawDto.value,
-          description: 'Successful withdraw',
+          value: parsedValue,
+          description,
           accountId: account.id,
         },
       }),
