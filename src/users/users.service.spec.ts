@@ -1,13 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service';
 import { PrismaService } from '../prisma/prisma.service';
-import { faker } from '@faker-js/faker';
 import { User } from './entities/user.entity';
 import {
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { makeFakeUser } from '../utils/tests/faker';
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -30,14 +30,7 @@ describe('UsersService', () => {
 
     prisma = module.get(PrismaService);
     service = module.get<UsersService>(UsersService);
-    fakeUser = {
-      id: faker.datatype.uuid(),
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      name: faker.name.fullName(),
-      email: faker.internet.email(),
-      password: faker.random.alphaNumeric(),
-    };
+    fakeUser = makeFakeUser();
   });
 
   it('should be defined', () => {
@@ -107,7 +100,7 @@ describe('UsersService', () => {
     expect(prisma.user.update).not.toHaveBeenCalled();
   });
 
-  it('should create a user with success', async () => {
+  it('should create an user with success', async () => {
     jest.spyOn(prisma.user, 'findUnique').mockResolvedValue(null);
     jest.spyOn(prisma.user, 'create').mockResolvedValue(fakeUser);
     jest
