@@ -1,6 +1,10 @@
-import { Injectable, UnprocessableEntityException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
@@ -34,7 +38,17 @@ export class UsersService {
     return this.prisma.user.findUnique({ where: { email } });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    const user = await this.findOne(id);
+
+    if (!user) throw new NotFoundException('User was not found');
+
+    return this.prisma.user.update({
+      data: {
+        name: updateUserDto.name,
+        email: updateUserDto.email,
+      },
+      where: { id },
+    });
   }
 }

@@ -11,7 +11,7 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiSecurity, ApiTags } from '@nestjs/swagger';
-import { IsPublic } from 'src/auth/decorators/is-public.decorator';
+import { IsPublic } from '../auth/decorators/is-public.decorator';
 @ApiTags('User')
 @Controller('users')
 export class UsersController {
@@ -35,7 +35,9 @@ export class UsersController {
 
   @ApiSecurity('bearer')
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    const user = await this.usersService.update(id, updateUserDto);
+
+    return { ...user, password: undefined };
   }
 }
