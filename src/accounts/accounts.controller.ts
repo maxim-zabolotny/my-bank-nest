@@ -7,8 +7,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { ApiSecurity, ApiTags } from '@nestjs/swagger';
-import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
-import { UserFromJwt } from 'src/auth/models/UserFromJwt';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import { UserFromJwt } from '../auth/models/UserFromJwt';
 import { AccountsService } from './accounts.service';
 import { DepositDto } from './dto/deposit-account.dto';
 import { TransferDto } from './dto/transfer-account.dto';
