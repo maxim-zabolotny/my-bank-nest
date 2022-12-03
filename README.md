@@ -1,4 +1,4 @@
-# My-bank API Service
+# My-bank API Service ![version](https://img.shields.io/badge/version-1.0.0-green "Version")
 
   <p align="center">A nest.js API to safe your money :D</p>
     <p align="center">
@@ -26,11 +26,17 @@ $ npm install
 There is a file `.env.example` with all variables to use, create a `.env` file like that:
 
 ```bash
-DATABASE_URL="postgresql://userrap:la4Yb01ma@localhost:5432/my-bank?schema=public"
+DATABASE_URL="postgresql://postgres:postgres@localhost:5440/my-bank-test?schema=public"
 JWT_SECRET="my-secret-credential"
 ```
 
 ## Running the app
+
+First you need run the migrations
+
+```bash
+$ npx prisma migrate dev
+```
 
 ```bash
 # development
