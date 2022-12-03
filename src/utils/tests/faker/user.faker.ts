@@ -7,5 +7,5 @@ export const makeFakeUser = (): User => ({
   updatedAt: new Date(),
   name: faker.name.fullName(),
   email: faker.internet.email(),
-  password: faker.random.alphaNumeric(),
+  password: faker.internet.password(10),
 });

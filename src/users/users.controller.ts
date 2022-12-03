@@ -12,6 +12,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { IsPublic } from '../auth/decorators/is-public.decorator';
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
+import { UserFromJwt } from 'src/auth/models/UserFromJwt';
 @ApiTags('User')
 @Controller('users')
 export class UsersController {
@@ -24,9 +26,9 @@ export class UsersController {
   }
 
   @ApiSecurity('bearer')
-  @Get(':id')
-  async findOne(@Param('id') id: string) {
-    const user = await this.usersService.findOne(id);
+  @Get('profile')
+  async profile(@CurrentUser() currentUser: UserFromJwt) {
+    const user = await this.usersService.findOne(currentUser.id);
 
     if (!user) throw new NotFoundException(`User was not found`);
 

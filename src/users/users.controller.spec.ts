@@ -59,7 +59,11 @@ describe('UsersController', () => {
 
     service.findOne.mockResolvedValueOnce(fakeResult);
 
-    const response = await controller.findOne(fakeResult.id);
+    const response = await controller.profile({
+      email: fakeUser.email,
+      id: fakeResult.id,
+      name: fakeUser.name,
+    });
 
     expect(service.findOne).toHaveBeenCalledWith(fakeResult.id);
     expect(response).toEqual({ ...fakeResult, password: undefined });
@@ -70,19 +74,25 @@ describe('UsersController', () => {
 
     service.findOne.mockRejectedValueOnce(exception);
 
-    expect(controller.findOne(faker.datatype.uuid())).rejects.toEqual(
-      exception,
-    );
+    expect(
+      controller.profile({
+        id: faker.datatype.uuid(),
+        email: faker.internet.email(),
+        name: faker.name.fullName(),
+      }),
+    ).rejects.toEqual(exception);
   });
 
   it('should throw if UsersService.findOne return null', async () => {
-    const fakeId = faker.datatype.uuid();
-
     service.findOne.mockResolvedValueOnce(null);
 
-    expect(controller.findOne(fakeId)).rejects.toEqual(
-      new NotFoundException(`User was not found`),
-    );
+    expect(
+      controller.profile({
+        id: faker.datatype.uuid(),
+        email: faker.internet.email(),
+        name: faker.name.fullName(),
+      }),
+    ).rejects.toEqual(new NotFoundException(`User was not found`));
   });
 
   it('should call UsersService.update with correct values', async () => {
