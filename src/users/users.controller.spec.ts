@@ -35,7 +35,6 @@ describe('UsersController', () => {
 
   it('should call UsersService.create with correct values', async () => {
     service.create.mockResolvedValueOnce(fakeUser);
-
     await controller.create(fakeUser);
 
     expect(service.create).toHaveBeenCalledWith(fakeUser);

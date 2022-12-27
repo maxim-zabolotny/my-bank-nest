@@ -3,7 +3,7 @@ import { IsEmail, IsString, MinLength } from 'class-validator';
 
 export class CreateUserDto {
   @IsString()
-  @MinLength(10)
+  @MinLength(2)
   @ApiProperty()
   name: string;
 
@@ -12,7 +12,7 @@ export class CreateUserDto {
   email: string;
 
   @IsString()
-  @MinLength(8)
+  @MinLength(3)
   @ApiProperty()
   password: string;
 }
