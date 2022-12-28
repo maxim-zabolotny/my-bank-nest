@@ -101,9 +101,9 @@ describe('UsersService', () => {
   });
 
   it('should create an user with success', async () => {
-    jest.spyOn(prisma.user, 'findUnique').mockResolvedValue(null);
-    jest.spyOn(prisma.user, 'create').mockResolvedValue(fakeUser);
-    jest
+    const res1 = jest.spyOn(prisma.user, 'findUnique').mockResolvedValue(null);
+    const res2 = jest.spyOn(prisma.user, 'create').mockResolvedValue(fakeUser);
+    const res3 = jest
       .spyOn(bcrypt, 'hash')
       .mockResolvedValueOnce('hash-password' as unknown as never);
 
@@ -111,18 +111,21 @@ describe('UsersService', () => {
       email: fakeUser.email,
       name: fakeUser.name,
       password: fakeUser.password,
+      phone: fakeUser.phone,
     });
 
     expect(response).toEqual({
       email: fakeUser.email,
       name: fakeUser.name,
       password: undefined,
+      phone: fakeUser.phone,
     });
     expect(prisma.user.create).toHaveBeenCalledWith({
       data: {
         email: fakeUser.email,
         name: fakeUser.name,
         password: 'hash-password',
+        phone: fakeUser.phone,
       },
     });
   });
@@ -135,6 +138,7 @@ describe('UsersService', () => {
       email: fakeUser.email,
       name: fakeUser.name,
       password: fakeUser.password,
+      phone: fakeUser.phone,
     });
 
     expect(response).rejects.toEqual(
