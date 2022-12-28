@@ -12,4 +12,10 @@ export class User {
   createdAt: Date;
   @ApiProperty()
   updatedAt: Date;
+
+  @ApiProperty()
+  phone: string;
+
+  @ApiProperty()
+  isPhoneNumberConfirmed: boolean;
 }

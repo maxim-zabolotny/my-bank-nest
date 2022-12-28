@@ -8,4 +8,6 @@ export const makeFakeUser = (): User => ({
   name: faker.name.fullName(),
   email: faker.internet.email(),
   password: faker.internet.password(10),
+  phone: faker.phone.number(),
+  isPhoneNumberConfirmed: false
 });

@@ -18,6 +18,14 @@ export class UsersService {
     if (alreadyExists)
       throw new UnprocessableEntityException(`User already exists`);
 
+    const alreadyExistPhone = await this.findByPhone(createUserDto.phone);
+
+    if (alreadyExistPhone) {
+      throw new UnprocessableEntityException(
+        `User with phone ${createUserDto.phone} already exists`,
+      );
+    }
+
     const hashPassword = await bcrypt.hash(createUserDto.password, 10);
 
     await this.prisma.user.create({
@@ -38,6 +46,10 @@ export class UsersService {
     return this.prisma.user.findUnique({ where: { email } });
   }
 
+  findByPhone(phone: string) {
+    return this.prisma.user.findUnique({ where: { phone } });
+  }
+
   async update(id: string, updateUserDto: UpdateUserDto) {
     const user = await this.findOne(id);
 
@@ -49,6 +61,17 @@ export class UsersService {
         email: updateUserDto.email,
       },
       where: { id },
+    });
+  }
+
+  async markPhoneNumberAsConfirmed(userId: string) {
+    await this.prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        isPhoneNumberConfirmed: true,
+      },
     });
   }
 }

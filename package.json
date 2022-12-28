@@ -38,7 +38,8 @@
     "passport-local": "^1.0.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
-    "rxjs": "^7.2.0"
+    "rxjs": "^7.2.0",
+    "twilio": "^3.84.0"
   },
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",
@@ -81,7 +82,9 @@
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
-    "coveragePathIgnorePatterns": ["/auth/"],
+    "coveragePathIgnorePatterns": [
+      "/auth/"
+    ],
     "collectCoverageFrom": [
       "**/*.(t|j)s"
     ],

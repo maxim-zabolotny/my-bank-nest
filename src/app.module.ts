@@ -5,9 +5,10 @@ import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { AccountsModule } from './accounts/accounts.module';
+import { TwilioModule } from './twilio/twilio.module';
 
 @Module({
-  imports: [UsersModule, PrismaModule, AuthModule, AccountsModule],
+  imports: [UsersModule, PrismaModule, AuthModule, AccountsModule, TwilioModule],
   controllers: [],
   providers: [
     {

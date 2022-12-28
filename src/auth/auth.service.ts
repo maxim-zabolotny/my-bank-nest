@@ -18,6 +18,8 @@ export class AuthService {
       sub: user.id,
       email: user.email,
       name: user.name,
+      isPhoneNumberConfirmed: user.isPhoneNumberConfirmed,
+      phone: user.phone,
     };
 
     return {
