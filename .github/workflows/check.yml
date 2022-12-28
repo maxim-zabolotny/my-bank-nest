@@ -1,6 +1,6 @@
 name: Check
 on: push
-jibs:
+jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
@@ -12,3 +12,6 @@ jibs:
 
       - name: Lint
         run: npm run lint
+
+      - name: Prettier
+        run: npm run fix
