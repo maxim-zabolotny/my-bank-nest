@@ -1,0 +1,17 @@
+name: Check
+on: push
+jibs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkouts@v3
+
+      - name: Install Deps
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Prettier
+        run: npm run fix
